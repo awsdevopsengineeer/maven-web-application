@@ -10,7 +10,7 @@ tools{
      //Poll SCM
      pollSCM('* * * * *')
      //Buid Periodically
-     cron('* * * * *')
+     //cron('* * * * *')
      //GitHub WebHook
      githubPush()
     
