@@ -5,6 +5,31 @@ pipeline {
 tools{
     maven "maven 3.6.1"
 }	
+
+   triggers {
+     //Poll SCM
+     pollSCM('* * * * *')
+     //Buid Periodically
+     cron('* * * * *')
+     //GitHub WebHook
+     githubPush()
+    
+   }
+   
+   
+   // Configure Pipeline-specific options
+   options {
+      
+       // Add timestamps to output
+       timestamps()
+       overrideIndexTriggers(false)
+       // timeout job after 60 minutes
+       timeout(time: 3,unit: 'MINUTES')
+       // Keep only last 5 builds
+       buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5'))
+       disableConcurrentBuilds()
+   }
+
 stages{
     stage('checkout'){
         steps{
