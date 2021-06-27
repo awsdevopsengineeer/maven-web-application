@@ -103,7 +103,7 @@
 	    </repository>
 	    
 	    <snapshotRepository>
-	      <id>nexus</id>
+	      <id>snapshots</id>
 	      <name>Mithun Technologies Snapshot Nexus Repository </name>
 	      <url>http://15.206.171.53:7799/theja/repository/wallmart-snapshot/</url>
 	    </snapshotRepository>
