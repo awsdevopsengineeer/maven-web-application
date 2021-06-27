@@ -1,0 +1,29 @@
+node{
+def mavenHome = tool name: "maven 3.6.1"
+properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')), pipelineTriggers([pollSCM('* * * * *')])])
+stage('checkout') {
+    git branch: 'development', credentialsId: 'c142cc5f-9517-4153-872f-c921a26f1ba5', url: 'https://github.com/awsdevopsengineeer/maven-web-application.git'
+}
+stage('build'){
+    sh "${mavenHome}/bin/mvn clean package"
+}
+stage('SonarQubeReportGen')
+{
+sh "${mavenHome}/bin/mvn sonar:sonar"
+}
+stage('Nexus')
+{
+sh "${mavenHome}/bin/mvn deploy"
+}
+stage('tomcat'){
+    sshagent(['e466de90-3bc4-4eee-8b89-0df494f6f985']) {
+  sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@65.2.123.224:/opt/tomcat9/webapps/"
+}
+}
+stage('notification'){
+    emailext body: '''build sucess
+
+regards,
+theja''', subject: 'build sucess', to: 'theja.theja6677@gmail.com'
+}
+}
