@@ -1,0 +1,54 @@
+pipeline {
+   
+	agent any
+
+tools{
+    maven "maven 3.6.1"
+}	
+stages{
+    stage('checkout'){
+        steps{
+            git branch: 'development', credentialsId: 'c142cc5f-9517-4153-872f-c921a26f1ba5', url: 'https://github.com/awsdevopsengineeer/maven-web-application.git'
+    }
+    
+}
+ stage('MavenBuild') {
+            steps {
+               sh 'mvn clean package'
+            }
+        }
+        
+         stage('SonarQubeReportExecution') {
+            steps {
+               sh 'mvn sonar:sonar'
+            }
+        }
+        stage('UploadArtifactIntoNexus') {
+            steps {
+               sh 'mvn deploy'
+            }
+        }
+        stage('DeployApplicationIntoTomcat') {
+            steps {
+            sshagent(['e466de90-3bc4-4eee-8b89-0df494f6f985']) {
+                 sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@65.2.123.224:/opt/tomcat9/webapps/"
+               } 
+            }
+        }
+}
+        post{
+            success{
+                   emailext body: '''build sucess
+
+                    regards,
+                        theja''', subject: 'build sucess', to: 'theja.theja6677@gmail.com'
+            }
+            failure{
+                   emailext body: '''build sucess
+
+                    regards,
+                    theja''', subject: 'build sucess', to: 'theja.theja6677@gmail.com'
+            }
+        }
+        
+}
