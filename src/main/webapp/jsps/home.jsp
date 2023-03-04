@@ -10,7 +10,7 @@
 </head>
 <body>
 <h1 align="center">I am wecoming you puji.</h1>
-<h1 align="center"> We wimm love togeather untill we die </h1>
+<h1 align="center"> We will love togeather untill we die </h1>
 <hr>
 <br>
 	<h1><h3> Server Side IP Address </h3><br>
